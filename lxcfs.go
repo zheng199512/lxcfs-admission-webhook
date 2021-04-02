@@ -200,6 +200,7 @@ func createPodPatch(pod *corev1.Pod) ([]byte, error) {
 	} else {
 		op.Op = "replace"
 		var target map[string]string
+		target = pod.Annotations
 		target[admissionWebhookAnnotationMutateKey] = "mutated"
 		glog.Infof("replace this annotation %s",admissionWebhookAnnotationMutateKey)
 		op.Path = "/metadata/annotations"
