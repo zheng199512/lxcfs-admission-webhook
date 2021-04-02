@@ -198,12 +198,12 @@ func createPodPatch(pod *corev1.Pod) ([]byte, error) {
 	if pod.Annotations == nil {
 		op.Op = "add"
 	} else {
-		op.Op = "add"
-		if pod.Annotations[admissionWebhookAnnotationStatusKey] != "" {
-			op.Op = " replace"
-		}
-		op.Path = "/metadata/annotations/" + escapeJSONPointerValue(admissionWebhookAnnotationStatusKey)
-		op.Value = "mutated"
+		op.Op = "replace"
+		var target map[string]string
+		target[admissionWebhookAnnotationMutateKey] = "mutated"
+		glog.Infof("replace this annotation %s",admissionWebhookAnnotationMutateKey)
+		op.Path = "/metadata/annotations"
+		op.Value = target
 	}
 
 	patches = append(patches, op)
